@@ -2,29 +2,39 @@ const express = require('express');
 const serverless = require('serverless-http')
 const app = express();
 const router = express.Router();
+require('dotenv').config();
+const mongoose = require('mongoose')
+
+const cors = require('cors');
+
+
+app.use(express.json());
+app.use(cors());
+mongoose.connect('mongodb+srv://chbm:chbm@cluster0.bpddoti.mongodb.net/deploy')  
 
 router.get('/', (req, res) => {
     res.send("The App is running")
 })
 
-router.get('/users', (req, res)=> {
-    res.send("Fetching the users")
-})
 
-router.get('/demo', (req, res) => {
-    res.json([
-      {
-        id: '001',
-        name: 'Smith',
-        email: 'smith@gmail.com',
-      },
-      {
-        id: '002',
-        name: 'Sam',
-        email: 'sam@gmail.com',
+
+app.get('/getUsers', (req, res) => {
+    UserModel.find({}, (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(result);
       }
-    ])
-})
+    });
+  });
+  
+  app.post('/createUser', async (req, res) => {
+    const user = req.body;
+    const newUser = new UserModel(user);
+    await newUser.save();
+  
+    res.json(user);
+  });
 
 app.use('/.netlify/functions/api', router);
 module.exports.handler = serverless(app)
