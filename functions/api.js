@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
 
 
-app.get('/getUsers', (req, res) => {
+router.get('/getUsers', (req, res) => {
     UserModel.find({}, (err, result) => {
       if (err) {
         res.json(err);
@@ -28,7 +28,7 @@ app.get('/getUsers', (req, res) => {
     });
   });
   
-  app.post('/createUser', async (req, res) => {
+router.post('/createUser', async (req, res) => {
     const user = req.body;
     const newUser = new UserModel(user);
     await newUser.save();
