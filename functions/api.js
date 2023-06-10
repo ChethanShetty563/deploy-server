@@ -20,13 +20,16 @@ router.get('/', (req, res) => {
 
 
 router.get('/getUsers', (req, res) => {
-    UserModel.find({}, (err, result) => {
-      if (err) {
-        res.json(err);
-      } else {
-        res.json(result);
-      }
-    });
+    UserModel.find({}).then((data) => {
+        if (!data) {
+            res.json({message : "Error"});
+          } else {
+            res.json(data);
+          }
+    }).catch(e => {
+        res.json({message : "Error"});
+    })
+     
   });
   
 router.post('/createUser', async (req, res) => {
